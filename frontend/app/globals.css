@@ -1,26 +1,94 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Mapping các biến CSS vào class của Tailwind */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.6);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Nền Kem Nhạt #efebcf */
+  --background: oklch(0.93 0.03 86.5);
+  --foreground: oklch(0.35 0.04 88.3);
+
+  /* Card & Popover */
+  --card: oklch(0.95 0.02 86.5);
+  --card-foreground: oklch(0.35 0.04 88.3);
+  --popover: oklch(0.98 0.01 86.5);
+  --popover-foreground: oklch(0.35 0.04 88.3);
+
+  /* Primary: Xanh rêu đậm #5c6149 */
+  --primary: oklch(0.42 0.04 105.5);
+  --primary-foreground: oklch(0.98 0.01 86.5);
+
+  /* Secondary: Hồng đất/Cánh gián #b78484 */
+  --secondary: oklch(0.65 0.08 15.5);
+  --secondary-foreground: oklch(0.98 0.01 86.5);
+
+  /* Muted & Accent: Xanh lá nhạt #d0ce9d */
+  --muted: oklch(0.85 0.06 102.5);
+  --muted-foreground: oklch(0.45 0.05 105.5);
+  --accent: oklch(0.82 0.07 100.5);
+  --accent-foreground: oklch(0.42 0.04 105.5);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  /* Border & Input: Xanh xám #a4a37f */
+  --border: oklch(0.70 0.05 100.5);
+  --input: oklch(0.70 0.05 100.5);
+  --ring: oklch(0.42 0.04 105.5);
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.91 0.04 86.5);
+  --sidebar-foreground: oklch(0.35 0.04 88.3);
+  --sidebar-primary: oklch(0.42 0.04 105.5);
+  --sidebar-primary-foreground: oklch(0.98 0.01 86.5);
+  --sidebar-accent: oklch(0.82 0.07 100.5);
+  --sidebar-accent-foreground: oklch(0.42 0.04 105.5);
+  --sidebar-border: oklch(0.80 0.05 100.5);
+  --sidebar-ring: oklch(0.42 0.04 105.5);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
 }
