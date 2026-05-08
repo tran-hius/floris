@@ -1,4 +1,4 @@
-import { Token } from '~/models/auth/token'
+import { Token } from '../models/auth/token'
 
 export interface ITokenRepository {
   create(token: Token): Promise<void>

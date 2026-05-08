@@ -1,7 +1,14 @@
-import { UserProps } from '../../types/auth/user.type'
+import { UserProps } from '@shared/types/auth/user.type'
+
+type UserRequiredProps = UserProps & {
+  roles: string[]
+  isBanned: boolean
+  createdAt: Date
+  updatedAt: Date
+}
 
 export class User {
-  private props: UserProps
+  private props: UserRequiredProps
 
   constructor(props: UserProps) {
     this.props = {
@@ -9,7 +16,7 @@ export class User {
       isBanned: props.isBanned ?? false,
       createdAt: props.createdAt ?? new Date(),
       updatedAt: props.updatedAt ?? new Date(),
-      roles: props.roles || []
+      roles: props.roles ?? []
     }
   }
 
@@ -29,10 +36,6 @@ export class User {
     return this.props.email
   }
 
-  get password() {
-    return this.props.password
-  }
-
   get isBanned() {
     return this.props.isBanned
   }
@@ -46,34 +49,43 @@ export class User {
   }
 
   get roles() {
-    return this.props.roles || []
+    return this.props.roles
   }
 
-  set fullName(value: string) {
-    this.props.fullName = value
-    this.touch()
+  get password() {
+    return this.props.password
   }
 
-  set userName(value: string) {
-    this.props.userName = value
-    this.touch()
-  }
-
-  set email(value: string) {
-    this.props.email = value
-    this.touch()
-  }
-
-  set password(value: string) {
-    this.props.password = value
-    this.touch()
-  }
-
-  setId(id: number) {
-    if (this.props.id) {
-      throw new Error('ID already set')
+  updateProfile(fullName: string) {
+    if (!fullName.trim()) {
+      throw new Error('Full name cannot be empty')
     }
-    this.props.id = id
+    this.props.fullName = fullName
+    this.touch()
+  }
+
+  changefullName(fullName: string) {
+    if (fullName.length < 4) {
+      throw new Error('Username must be at least 4 characters')
+    }
+    this.props.fullName = fullName
+    this.touch()
+  }
+
+  changeEmail(email: string) {
+    if (!email.includes('@')) {
+      throw new Error('Invalid email')
+    }
+    this.props.email = email
+    this.touch()
+  }
+
+  changePassword(newPassword: string) {
+    if (newPassword.length < 6) {
+      throw new Error('Password too short')
+    }
+    this.props.password = newPassword
+    this.touch()
   }
 
   ban() {
@@ -84,6 +96,25 @@ export class User {
   unban() {
     this.props.isBanned = false
     this.touch()
+  }
+
+  assignRole(role: string) {
+    if (!this.props.roles.includes(role)) {
+      this.props.roles.push(role)
+      this.touch()
+    }
+  }
+
+  removeRole(role: string) {
+    this.props.roles = this.props.roles.filter((r) => r !== role)
+    this.touch()
+  }
+
+  setId(id: number) {
+    if (this.props.id) {
+      throw new Error('ID already set')
+    }
+    this.props.id = id
   }
 
   private touch() {

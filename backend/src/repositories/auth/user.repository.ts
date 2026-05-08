@@ -1,10 +1,10 @@
 import { Pool } from 'mysql2/promise'
 import { IUserRepository } from '../../interfaces/IUserRepository'
 import { User } from '../../models/auth/user'
-import { Database } from '~/config/database'
-import { logger } from '~/utils/logger'
-import { UserProps } from '~/types/auth/user.type'
-import { UserRole } from '~/models/auth/user.role'
+import { Database } from '../../config/database'
+import { logger } from '../../utils/logger'
+import { UserProps } from '@shared/types/auth/user.type'
+import { UserRole } from '../../models/auth/user.role'
 
 export class UserRepository implements IUserRepository {
   private pool: Pool
@@ -65,7 +65,7 @@ export class UserRepository implements IUserRepository {
     return this.mapToModel(rows[0])
   }
 
-  async create(user: Omit<User, 'id'>): Promise<User> {
+  async create(user: Omit<UserProps, 'id'>): Promise<User> {
     try {
       const [result]: any = await this.pool.query(
         `INSERT INTO users (full_name, user_name, email, password) VALUES (?, ?, ?, ?)`,
@@ -90,7 +90,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async update(id: number, user: Partial<User>): Promise<boolean> {
+  async update(id: number, user: Partial<UserProps>): Promise<boolean> {
     try {
       const updateData: any = {}
 

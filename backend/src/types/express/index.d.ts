@@ -1,4 +1,4 @@
-import { UserProps } from '../auth/user.type' // Đường dẫn tới file type của bạn
+import { UserProps } from '../../../../shared/types/auth/user.type' // Đường dẫn tới file type của bạn
 
 declare global {
   namespace Express {

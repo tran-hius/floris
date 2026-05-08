@@ -1,4 +1,4 @@
-import { RoleProps } from '~/types/auth/role.type'
+import { RoleProps } from '@shared/types/auth/role.type'
 
 export class Role {
   private props: RoleProps

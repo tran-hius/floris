@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt'
-import { IUserRepository } from '~/interfaces/IUserRepository'
-import { User } from '~/models/auth/user'
-import { UserProps } from '~/types/auth/user.type'
-import { UserRole } from '~/models/auth/user.role'
-import { logger } from '~/utils/logger'
-import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '~/utils/errors'
+import { IUserRepository } from '../../interfaces/IUserRepository'
+import { User } from '../../models/auth/user'
+import { UserRole } from '../../models/auth/user.role'
+import { logger } from '../../utils/logger'
+import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../../utils/errors'
 import { TokenService } from './token.service'
+import { RegisterDTO } from '@shared/dto/auth/register.dto'
+import { LoginDTO } from '@shared/dto/auth/login.dto'
 
 export class AuthService {
   constructor(
@@ -13,7 +14,7 @@ export class AuthService {
     private tokenService: TokenService
   ) {}
 
-  async register(data: Omit<UserProps, 'id' | 'isBanned' | 'createdAt' | 'updatedAt'>) {
+  async register(data: RegisterDTO) {
     try {
       const existingUser = await this.userRepository.findByEmail(data.email)
       if (existingUser) {
@@ -47,14 +48,14 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password: string) {
+  async login(data: LoginDTO) {
     try {
-      const user = await this.userRepository.findByEmail(email)
+      const user = await this.userRepository.findByEmail(data.email)
       if (!user) {
         throw new UnauthorizedError('Invalid email or password')
       }
 
-      const isMatch = await bcrypt.compare(password, user.password)
+      const isMatch = await bcrypt.compare(data.password, user.password)
 
       if (!isMatch) {
         throw new UnauthorizedError('Invalid email or password')
@@ -66,7 +67,7 @@ export class AuthService {
 
       const tokens = await this.tokenService.generateAuthTokens(user)
 
-      logger.info(`[AuthService]: User ${email} đăng nhập thành công.`)
+      logger.info(`[AuthService]: User ${data.email} đăng nhập thành công.`)
 
       return {
         user: user.toJson(),

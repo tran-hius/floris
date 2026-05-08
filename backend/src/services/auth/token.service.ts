@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import { ITokenRepository } from '../../interfaces/ITokenRepository'
-import { Token } from '~/models/auth/token'
-import { User } from '~/models/auth/user'
+import { Token } from '../../models/auth/token'
+import { User } from '../../models/auth/user'
 export class TokenService {
   private readonly jwtSecret = process.env.JWT_SECRET || 'super_secret'
   private readonly jwtExpiresIn = '2m'

@@ -1,4 +1,4 @@
-import { TokenProps } from '~/types/auth/token.type'
+import { TokenProps } from '@shared/types/auth/token.type'
 
 export class Token {
   private props: TokenProps

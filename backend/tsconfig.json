@@ -4,8 +4,8 @@
     "moduleResolution": "NodeNext",
 
     "target": "ES2023",
+    "rootDir": "..",
     "outDir": "dist",
-    "rootDir": "src",
 
     "strict": true,
 
@@ -16,9 +16,10 @@
     "forceConsistentCasingInFileNames": true,
 
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../shared/types/auth", "../shared/dto/product", "../shared/dto/auth", "../shared/types/product"],
   "exclude": ["node_modules", "dist"]
 }

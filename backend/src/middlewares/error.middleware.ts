@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { AppError } from '~/utils/errors/app.error'
-import { logger } from '~/utils/logger'
+import { AppError } from '../utils/errors/app.error'
+import { logger } from '../utils/logger'
 
 export const errorMiddleware = (err: unknown, req: Request, res: Response, next: NextFunction) => {
   const error = err as any

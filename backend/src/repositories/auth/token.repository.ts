@@ -1,7 +1,7 @@
 import { Pool } from 'mysql2/promise'
 import { ITokenRepository } from '../../interfaces/ITokenRepository'
-import { Token } from '~/models/auth/token'
-import { Database } from '~/config/database'
+import { Token } from '../../models/auth/token'
+import { Database } from '../../config/database'
 
 export class TokenRepository implements ITokenRepository {
   private pool: Pool

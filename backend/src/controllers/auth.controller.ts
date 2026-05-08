@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { AuthService } from '~/services/auth/auth.service'
-import { UnauthorizedError } from '~/utils/errors'
+import { AuthService } from '../services/auth/auth.service'
+import { UnauthorizedError } from '../utils/errors'
 
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -24,7 +24,7 @@ export class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body
-      const result = await this.authService.login(email, password)
+      const result = await this.authService.login({ email, password })
 
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
@@ -36,6 +36,29 @@ export class AuthController {
       return res.status(200).json({
         status: 'success',
         message: 'User logged successfully',
+        data: result
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  getProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'ID không hợp lệ'
+        })
+      }
+
+      const result = await this.authService.getProfile(id)
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Lấy thông tin người dùng thành công',
         data: result
       })
     } catch (error) {
@@ -55,7 +78,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000 
+        maxAge: 7 * 24 * 60 * 60 * 1000
       })
       return res.status(200).json({
         status: 'success',

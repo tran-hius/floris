@@ -1,5 +1,5 @@
 import mysql, { Pool } from 'mysql2/promise'
-import { logger } from '~/utils/logger'
+import { logger } from '../utils/logger'
 
 export class Database {
   private static instance: Pool

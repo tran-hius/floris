@@ -1,67 +1,102 @@
 services:
   backend:
-    build: 
-      context: ./backend  # Trỏ vào folder backend để lấy Dockerfile và code
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+
     restart: always
+
     ports:
       - "${APP_PORT}:${APP_PORT}"
+
     depends_on:
       db:
         condition: service_healthy
+
     env_file:
-      - .env    # Đường dẫn mới tới file .env
+      - .env
+
     environment:
       DB_HOST: db
+
     volumes:
-      - ./backend/logs:/app/logs # Map log từ folder backend
+      - ./backend/logs:/app/backend/logs
+
     networks:
       - shop-network
 
   db:
     image: mysql:8.0
+
     restart: always
+
     env_file:
-      - .env    # DB cũng dùng chung file .env trong backend (hoặc file riêng ở root)
+      - .env
+
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+
     ports:
       - "${DB_PORT}:3306"
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-p${DB_ROOT_PASSWORD}"
+        ]
+
       interval: 5s
       timeout: 5s
       retries: 10
+
     volumes:
       - db_data:/var/lib/mysql
-      # Cực kỳ quan trọng: Đường dẫn file SQL khởi tạo phải chuẩn
       - ./backend/src/data/init.sql:/docker-entrypoint-initdb.d/init.sql
+
     networks:
       - shop-network
-  
+
   redis:
     image: redis:alpine
+
     container_name: redis
+
     restart: always
+
     ports:
       - "6379:6379"
+
     networks:
       - shop-network
 
   frontend:
     build:
-      context: ./frontend
+      context: .
+      dockerfile: ./frontend/Dockerfile
+
     restart: always
+
     ports:
       - "3000:3000"
+
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+
     depends_on:
       - backend
+
     networks:
       - shop-network
+
 volumes:
   db_data:
 
